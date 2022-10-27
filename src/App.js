@@ -4,6 +4,8 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Main from './layouts/Main';
 import Home from './Pages/Home/Home';
 import Courses from './Pages/Courses/Courses';
+import Login from './Pages/Login/Login/Login';
+import Register from './Pages/Login/Register/Register';
 
 function App() {
 
@@ -18,11 +20,21 @@ function App() {
         },
         {
           path: 'home',
-          element: <Home></Home>
+          element: <Home></Home>,
+          loader: ()=>fetch(`https://nieamulkabir.github.io/data-generate-file/alfath.json`)
         },
         {
           path: 'courses',
-          element: <Courses></Courses>
+          element: <Courses></Courses>,
+          loader: ()=>fetch(`https://nieamulkabir.github.io/data-generate-file/alfath.json`)
+        },
+        {
+          path:'login',
+          element:<Login></Login>
+        },
+        {
+          path:'register',
+          element:<Register></Register>
         }
       ]
     }

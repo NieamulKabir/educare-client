@@ -10,27 +10,13 @@ let activeStyle = {
 
 const Header = () => {
     return (
-        <div>
-             <nav className="sticky top-0 w-full z-50 text-gray-800">
-                {/* <div className='flex justify-between px-2 md:px-12  bg-gray-500 text-white items-center'>
-                    <div className='text-start text-xs md:text-base'>
-                        <h1 data-aos="fade-right"
-                            data-aos-offset="300"
-                            data-aos-easing="ease-in-sine">We're here to provide 24/7 at your service</h1>
-                    </div>
-                    <div data-aos="fade-left"
-                        data-aos-anchor="#example-anchor"
-                        data-aos-offset="500"
-                        data-aos-duration="500" className='md:flex py-2 '>
-                        <h1 className='md:mr-3 text-end text-xs  md:text-base'><i className="fa-solid fa-phone mr-[3px]"></i>01517828832</h1>
-                        <h1 className='text-xs text-end  md:text-base'><i className="fa-regular fa-envelope mr-[3px]"></i>limitless@gmail.com</h1>
-                    </div>
-                </div> */}
-                <div className="navbar bg-[#a2f3c0]">
+        <>
+            <nav className="sticky  top-0 w-full z-50 text-gray-800">
+                <div className="navbar bg-gray-200">
                     <div className="flex-1 md:pl-5 mx-2">
                         <Link to="/">
                             <div className="relative top-[]">
-                                <p className='font-mono font-extrabold text-base text-violet-600  md:text-2xl flex justify-center items-center'><FaPencilRuler/> EduCare</p>
+                                <p className='font-mono font-extrabold text-base text-violet-600  md:text-2xl flex justify-center items-center'><FaPencilRuler /> EduCare</p>
                             </div>
                         </Link>
                     </div>
@@ -67,8 +53,12 @@ const Header = () => {
                                     <button className="py-3">CONTACT</button>
                                 </NavLink>
                             </h1>
+                            <div className='ml-24 md:ml-80  lg:ml-0 lg:mr-6'>
+                                <Link to='/login' className="bg-violet-600 px-4 py-[12px] font-semibold text-white rounded-xl w-36">
+                                    LOG IN
+                                </Link>
+                            </div>
 
-                           
 
                             {/* <h1>
                                 {
@@ -130,7 +120,7 @@ const Header = () => {
                                     COURSES
                                 </Link>
                             </li>
-                        
+
 
 
                             <li>
@@ -182,7 +172,7 @@ const Header = () => {
                     </div>
                 </div>
             </nav>
-        </div>
+        </>
     );
 };
 

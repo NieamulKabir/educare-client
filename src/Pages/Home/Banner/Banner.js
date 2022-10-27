@@ -4,7 +4,7 @@ import education from '../../../assets/education.json'
 
 const Banner = () => {
     return (
-        <div className='bg-lime-100'>
+        <div className='bg-[#b8dde3]'>
             <div className='px-4 py-10 pb-24 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:pb-24'>
                 <div className='flex flex-col items-center justify-between lg:flex-row'>
                     <div className='mb-10 lg:max-w-lg  lg:pr-5 lg:mb-0'>
