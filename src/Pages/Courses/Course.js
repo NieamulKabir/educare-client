@@ -1,9 +1,14 @@
 import React from 'react';
 import { FaBook, FaStar } from 'react-icons/fa';
 import { NavLink } from 'react-router-dom';
+import Loading from '../../Loading/Loading';
 
 const Course = ({ course }) => {
     const { id, img, sector, title, lessons, ratting, price } = course;
+
+    if (course.length < 0) {
+        return <Loading></Loading>
+    }
     return (
         <div className=' '>
             <div className="transform hover:-translate-y-3 to-hover text-center secondary-bg transition duration-300 w-full mx-auto bg-gray-200 rounded-2xl">

@@ -1,54 +1,63 @@
-import React from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useCreateUserWithEmailAndPassword, useSignInWithGoogle, useUpdateProfile } from 'react-firebase-hooks/auth';
-import auth from '../../../firebase.config';
+import React, { useContext, useState } from 'react';
+import { Link } from 'react-router-dom';
 import Loading from '../../../Loading/Loading';
 import toast from 'react-hot-toast';
 import { FaGoogle } from 'react-icons/fa';
 import Lottie from 'lottie-react'
 import register from '../../../assets/register.json'
+import { AuthContext } from '../../../Context/AuthProvider/AuthProvider';
+import { GoogleAuthProvider } from 'firebase/auth';
 
 const Register = () => {
 
-    const [
-        createUserWithEmailAndPassword,
-        loading,
-        user,
-        error
-    ] = useCreateUserWithEmailAndPassword(auth, { sendEmailVerification: true });
-    const [signInWithGoogle, Guser, Gloading, Gerror] = useSignInWithGoogle(auth);
+    const [error, setError] = useState('');
+    const { createUser, updateUserProfile, providerLogin, verifyEmail } = useContext(AuthContext);
+    const googleProvider = new GoogleAuthProvider()
 
-    let errorElement;
+    const handleSubmit = event => {
+        event.preventDefault();
+        const form = event.target;
+        const name = form.name.value;
+        const photoURL = form.photoURL.value;
+        const email = form.email.value;
+        const password = form.password.value;
+    
 
-    const [updateProfile, updating] = useUpdateProfile(auth);
-    const navigate = useNavigate();
-    const location = useLocation();
-
-    let from = location.state?.from?.pathname || "/";
-
-    if (loading || Gloading || updating) {
-        return <Loading></Loading>
-    }
-
-    const handleRegister = async (e) => {
-        e.preventDefault();
-        const name = e.target.name.value;
-        const email = e.target.email.value;
-        const password = e.target.password.value;
-
-        await createUserWithEmailAndPassword(email, password);
-        await updateProfile({ displayName: name });
-        navigate('/home')
+        createUser(email, password)
+            .then(result => {
+                const user = result.user;
+                console.log(user);
+                setError('');
+                form.reset();
+                handleEmailVerification();
+                toast.success('Please verify your email address.')
+            })
+            .catch(e => {
+                console.error(e);
+                setError(e.message);
+            });
     }
 
 
+    const handleEmailVerification = () => {
+        verifyEmail()
+            .then(() => { })
+            .catch(error => console.error(error));
+    }
 
-    if (user || Guser) {
-        navigate(from, { replace: true });
+    const handleGoogleSignIn = () => {
+        providerLogin(googleProvider)
+            .then(result => {
+                const user = result.user;
+               if(user){
+                toast.success("Successfully Login With Google");
+               }
+            })
+            .catch(error => console.error(error))
     }
-    if (error || Gerror) {
-        errorElement = <p className='text-danger'>Error: {error?.message}{Gerror.message}</p>
-    }
+
+
+
     return (
         <div>
 
@@ -62,11 +71,11 @@ const Register = () => {
                                 <div className='h-full w-full'>
                                     <Lottie animationData={register} loop={true} />
                                 </div>
-                              
+
                             </div>
                         </div>
                         <div className="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
-                            <form onSubmit={handleRegister} className="card-body pb-3">
+                            <form onSubmit={handleSubmit} className="card-body pb-3">
                                 <div className="form-control">
                                     <label className="label">
                                         <span className="label-text">Name</span>
@@ -90,7 +99,7 @@ const Register = () => {
                                     </label>
                                 </div>
                                 <div className="text-red-500 my-1">
-                                    {errorElement}
+                                    {error}
                                 </div>
                                 <div className="form-control mb-0">
                                     <button className="btn btn-primary">Register</button>
@@ -98,12 +107,12 @@ const Register = () => {
                             </form>
 
                             <div className="divider mx-6 mt-0">OR</div>
+                        
                             <button
-                                onClick={async () => {
-                                    await signInWithGoogle();
-                                    toast.success('Successfully log in With Google')
-                                }}
-                                className="btn w-[80%] mx-auto mb-10"><FaGoogle className='mr-2 text-2xl' ></FaGoogle>Google Signin</button>
+                                onClick={handleGoogleSignIn}
+                                className="btn w-[80%] mx-auto mb-10"><FaGoogle className='mr-2 text-2xl' >
+                                </FaGoogle>Google Signin
+                            </button>
 
                         </div>
                     </div>

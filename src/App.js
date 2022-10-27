@@ -9,6 +9,8 @@ import Register from './Pages/Login/Register/Register';
 import { Toaster } from 'react-hot-toast';
 import Contact from './Pages/Contact/Contact';
 import CourseDetails from './Pages/Courses/CourseDetrails/CourseDetails';
+import PrivateRoute from './Pages/PrivateRoute/PrivateRoute'
+import Blog from './Pages/Blog/Blog';
 
 function App() {
 
@@ -32,31 +34,35 @@ function App() {
           loader: () => fetch(`http://localhost:5000/allCourses`)
         },
         {
-          path:'courseDetails/:id',
-          element: <CourseDetails></CourseDetails>,
-          loader:({params})=>fetch(`http://localhost:5000/courses/${params.id}`)
+          path: 'courseDetails/:id',
+          element: <PrivateRoute><CourseDetails></CourseDetails></PrivateRoute>,
+          loader: ({ params }) => fetch(`http://localhost:5000/courses/${params.id}`)
         },
         {
-          path: 'contact',
-          element: <Contact></Contact>
+          path: 'blog',
+          element: <Blog></Blog>
         },
-        {
-          path: 'login',
-          element: <Login></Login>
-        },
-        {
-          path: 'register',
-          element: <Register></Register>
-        }
-      ]
+    {
+      path: 'contact',
+      element: <Contact></Contact>
+    },
+    {
+      path: 'login',
+      element: <Login></Login>
+    },
+    {
+      path: 'register',
+      element: <Register></Register>
+    }
+  ]
     }
   ])
-  return (
-    <div>
-      <RouterProvider router={router}></RouterProvider>
-      <Toaster></Toaster>
-    </div>
-  );
+return (
+  <div>
+    <RouterProvider router={router}></RouterProvider>
+    <Toaster></Toaster>
+  </div>
+);
 }
 
 export default App;

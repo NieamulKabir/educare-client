@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { Link, NavLink } from 'react-router-dom';
-import { FaPencilRuler, FaUser } from "react-icons/fa";
+import { FaMoon, FaPencilRuler, FaSun, FaUser } from "react-icons/fa";
 import auth from '../../../firebase.config';
 import { signOut } from 'firebase/auth';
 import toast from 'react-hot-toast';
+import { AuthContext } from '../../../Context/AuthProvider/AuthProvider';
+import { useDarkMode } from '../../../hooks/useDarkMode';
 
 
 let activeStyle = {
@@ -16,10 +18,13 @@ let activeStyle = {
 
 
 const Header = () => {
-    const [user] = useAuthState(auth);
+    const [isDarkMode, toggleDarkMode] = useDarkMode();
+    const { user, logOut } = useContext(AuthContext);
 
     const handleSignOut = () => {
-        signOut(auth)
+        logOut()
+            .then(() => { })
+            .catch(error => console.error(error))
 
     }
     return (
@@ -55,9 +60,18 @@ const Header = () => {
                                     <button className="py-3">COURSES</button>
                                 </NavLink>
                             </h1>
+                            <h1 className="btn font-bold hover:bg-rose-100   btn-ghost text-gray-800 rounded-btn mr-2">
+                                <NavLink to="/blog"
+                                    style={({ isActive }) =>
+                                        isActive ? activeStyle : undefined
+                                    }
+                                >
+                                    <button className="py-3">BLOG</button>
+                                </NavLink>
+                            </h1>
 
 
-                            <h1 className="btn font-bold hover:bg-rose-100   btn-ghost text-gray-800 rounded-btn">
+                            <h1 className="btn font-bold hover:bg-rose-100   btn-ghost text-gray-800 rounded-btn mr-2">
                                 <NavLink to="/contact"
                                     style={({ isActive }) =>
                                         isActive ? activeStyle : undefined
@@ -66,21 +80,22 @@ const Header = () => {
                                     <button className="py-3">CONTACT</button>
                                 </NavLink>
                             </h1>
-                       
+
                             <h1>
                                 {
                                     user?.displayName &&
-                                    
+
+
                                     <div className='flex justify-center items-center'>
-                                        <h3 className="text-lg font-semibold pr-2 ml-0 text-violet-700">Hi,{user?.displayName}  </h3>
-                                        <>
-                                        {
-                                            user?.photoURL ?
-                                            <img className="rounded-3xl w-10" src={user?.photoURL} alt="" />
-                                            :
-                                            <FaUser></FaUser>
-                                        }
-                                        </>
+
+                                        <div className='tooltip tooltip-bottom' data-tip={user?.displayName}>
+                                            {
+                                                user?.photoURL ?
+                                                    <img className="rounded-3xl w-10 tooltip" src={user?.photoURL} alt="" />
+                                                    :
+                                                    <FaUser></FaUser>
+                                            }
+                                        </div>
                                     </div>
 
                                 }
@@ -112,10 +127,18 @@ const Header = () => {
 
                             </h1>
 
-
+                            <h1 className='flex justify-center items-center'>
+                                <span className='px-2'><FaMoon></FaMoon> </span>
+                                {
+                                    isDarkMode ? <input data-tip="DarkMood" type="checkbox" className="toggle tooltip tooltip-bottom bg-emerald-400" onChange={toggleDarkMode} /> :
+                                        <input data-tip="Regular" type="checkbox" className="toggle tooltip tooltip-bottom bg-emerald-400" defaultChecked onChange={toggleDarkMode} />
+                                }
+                                <span className='px-2'><FaSun></FaSun></span>
+                            </h1>
 
                         </div>
                     </div>
+
 
                     {/* tablate ans phone  */}
                     <div className="flex-none lg:hidden dropdown dropdown-left">
@@ -135,6 +158,11 @@ const Header = () => {
                                     COURSES
                                 </Link>
                             </li>
+                            <li className="">
+                                <Link className="btn hover:bg-slate-300 dark:hover:bg-slate-500 btn-ghost rounded-btn mx-3" to="/blog">
+                                    Blog
+                                </Link>
+                            </li>
 
 
 
@@ -145,7 +173,7 @@ const Header = () => {
                             </li>
 
 
-                            {/* <li className='py-2'>
+                            <li className='py-2'>
                                 {
                                     user?.displayName &&
                                     <div className='flex justify-center items-center'>
@@ -154,9 +182,9 @@ const Header = () => {
                                     </div>
 
                                 }
-                            </li> */}
+                            </li>
 
-                            {/* <li>
+                            <li>
                                 {
                                     user ?
                                         <button
@@ -181,7 +209,7 @@ const Header = () => {
                                         </div>
                                 }
 
-                            </li> */}
+                            </li>
 
                         </ul>
                     </div>

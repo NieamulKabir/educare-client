@@ -1,64 +1,65 @@
-import React, { useRef } from 'react';
-import { useSendPasswordResetEmail, useSignInWithEmailAndPassword, useSignInWithGoogle } from 'react-firebase-hooks/auth';
+import React, { useContext, useState } from 'react';
 import toast from 'react-hot-toast';
-import { FaGoogle } from 'react-icons/fa';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import auth from '../../../firebase.config';
 import Loading from '../../../Loading/Loading';
 import Lottie from 'lottie-react'
 import login from '../../../assets/login.json'
+// import OtherAccount from '../OtherAccount/OtherAccount';
+import { AuthContext } from '../../../Context/AuthProvider/AuthProvider';
+import { GoogleAuthProvider } from 'firebase/auth';
+import { FaGoogle } from 'react-icons/fa';
 
 const Login = () => {
 
-    const emailRef = useRef('');
-    const passwordRef = useRef('');
+    const [error, setError] = useState('');
+    const { signIn, setLoading, providerLogin } = useContext(AuthContext);
+    const googleProvider = new GoogleAuthProvider()
     const navigate = useNavigate();
     const location = useLocation();
 
-    let from = location.state?.from?.pathname || "/";
-    let errorElement;
-    const [
-        signInWithEmailAndPassword,
-        user,
-        loading,
-        error,
-    ] = useSignInWithEmailAndPassword(auth);
-    const [sendPasswordResetEmail, sending] = useSendPasswordResetEmail(auth);
-    const [signInWithGoogle, Guser, Gloading, Gerror] = useSignInWithGoogle(auth);
+    const from = location.state?.from?.pathname || '/';
 
-    if (loading || Gloading || sending) {
-        return <Loading></Loading>
+    const handleSubmit = event => {
+        event.preventDefault();
+        const form = event.target;
+        const email = form.email.value;
+        const password = form.password.value;
+
+        signIn(email, password)
+            .then(result => {
+                const user = result.user;
+                console.log(user);
+                form.reset();
+                setError('');
+                if (user.emailVerified) {
+                    navigate(from, { replace: true });
+                }
+                else {
+                    toast.error('Your email is not verified. Please verify your email address.')
+                }
+            })
+            .catch(error => {
+                console.error(error)
+                setError(error.message);
+            })
+            .finally(() => {
+                setLoading(false);
+            })
     }
 
 
-    if (user || Guser) {
-
-        navigate(from, { replace: true });
+    const handleGoogleSignIn = () => {
+        providerLogin(googleProvider)
+            .then(result => {
+                const user = result.user;
+                navigate(from, { replace: true })
+                if(user){
+                    toast.success("Successfully Login With Google");
+                   }
+            })
+            .catch(error => console.error(error))
     }
 
-    if (error || Gerror) {
-        errorElement = <p className='text-danger'>Error: {error?.message}{Gerror.message}</p>
-    }
-
-    const handleSubmit = async e => {
-        e.preventDefault();
-        const email = emailRef.current.value;
-        const password = passwordRef.current.value;
-        await signInWithEmailAndPassword(email, password)
-        toast.success('Successfully Login')
-    }
-
-
-    // const resetPassword = async () => {
-    //     const email = emailRef.current.value;
-    //     if (email) {
-    //         await sendPasswordResetEmail(email);
-    //         toast.success('Sent email');
-    //     }
-    //     else {
-    //         toast('please enter your email address');
-    //     }
-    // }
 
 
     return (
@@ -69,8 +70,8 @@ const Login = () => {
                         <div className="text-center lg:text-left">
                             <h1 className="text-5xl font-bold">Login now!</h1>
                             <div className='h-full w-full'>
-                                    <Lottie animationData={login} loop={true} />
-                                </div>
+                                <Lottie animationData={login} loop={true} />
+                            </div>
                         </div>
                         <div className="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
                             <form onSubmit={handleSubmit} className="card-body pb-3">
@@ -91,7 +92,7 @@ const Login = () => {
 
                                 </div>
                                 <div className="text-red-500 py-1">
-                                    {errorElement}
+                                    {error}
                                 </div>
                                 <label className="label">
                                     <h1>Need Account? <span className='text-violet-500 font-semibold'> <Link to='/register'>Click to Register</Link> </span></h1>
@@ -101,14 +102,13 @@ const Login = () => {
                                 </div>
                             </form>
                             <div className="divider mx-6 mt-0">OR</div>
+                            {/* <OtherAccount></OtherAccount> */}
+
                             <button
-                                onClick={async () => {
-                                    await signInWithGoogle();
-                                    toast.success('Successfully log in With Google')
-                                }}
-                                className="btn w-[80%] mx-auto mb-10"><FaGoogle className='mr-2 text-2xl' ></FaGoogle>Google Signin</button>
-
-
+                                onClick={handleGoogleSignIn}
+                                className="btn w-[80%] mx-auto mb-10"><FaGoogle className='mr-2 text-2xl' >
+                                </FaGoogle>Google Signin
+                            </button>
 
                         </div>
                     </div>
