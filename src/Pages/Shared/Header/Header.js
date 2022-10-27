@@ -1,6 +1,11 @@
 import React from 'react';
+import { useAuthState } from 'react-firebase-hooks/auth';
 import { Link, NavLink } from 'react-router-dom';
-import { FaPencilRuler } from "react-icons/fa";
+import { FaPencilRuler, FaUser } from "react-icons/fa";
+import auth from '../../../firebase.config';
+import { signOut } from 'firebase/auth';
+import toast from 'react-hot-toast';
+
 
 let activeStyle = {
     textDecoration: "underline",
@@ -8,7 +13,15 @@ let activeStyle = {
 
 };
 
+
+
 const Header = () => {
+    const [user] = useAuthState(auth);
+
+    const handleSignOut = () => {
+        signOut(auth)
+
+    }
     return (
         <>
             <nav className="sticky  top-0 w-full z-50 text-gray-800">
@@ -53,31 +66,33 @@ const Header = () => {
                                     <button className="py-3">CONTACT</button>
                                 </NavLink>
                             </h1>
-                            <div className='ml-24 md:ml-80  lg:ml-0 lg:mr-6'>
-                                <Link to='/login' className="bg-violet-600 px-4 py-[12px] font-semibold text-white rounded-xl w-36">
-                                    LOG IN
-                                </Link>
-                            </div>
-
-
-                            {/* <h1>
+                       
+                            <h1>
                                 {
                                     user?.displayName &&
+                                    
                                     <div className='flex justify-center items-center'>
                                         <h3 className="text-lg font-semibold pr-2 ml-0 text-violet-700">Hi,{user?.displayName}  </h3>
-                                        <img className="rounded-3xl w-10" src={user?.photoURL} alt="" />
+                                        <>
+                                        {
+                                            user?.photoURL ?
+                                            <img className="rounded-3xl w-10" src={user?.photoURL} alt="" />
+                                            :
+                                            <FaUser></FaUser>
+                                        }
+                                        </>
                                     </div>
 
                                 }
-                            </h1> */}
+                            </h1>
 
-                            {/* <h1>
+                            <h1>
                                 {
                                     user ?
                                         <button
                                             onClick={async () => {
                                                 await handleSignOut();
-                                                toast("Successfully Sign Out");
+                                                toast.success("Successfully Sign Out");
                                             }
 
                                             }>
@@ -95,7 +110,7 @@ const Header = () => {
                                         </div>
                                 }
 
-                            </h1> */}
+                            </h1>
 
 
 

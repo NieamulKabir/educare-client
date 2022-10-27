@@ -1,4 +1,4 @@
-import logo from './logo.svg';
+
 import './App.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Main from './layouts/Main';
@@ -6,6 +6,9 @@ import Home from './Pages/Home/Home';
 import Courses from './Pages/Courses/Courses';
 import Login from './Pages/Login/Login/Login';
 import Register from './Pages/Login/Register/Register';
+import { Toaster } from 'react-hot-toast';
+import Contact from './Pages/Contact/Contact';
+import CourseDetails from './Pages/Courses/CourseDetrails/CourseDetails';
 
 function App() {
 
@@ -21,20 +24,29 @@ function App() {
         {
           path: 'home',
           element: <Home></Home>,
-          loader: ()=>fetch(`https://nieamulkabir.github.io/data-generate-file/alfath.json`)
+          loader: () => fetch(`http://localhost:5000/allcourses`)
         },
         {
           path: 'courses',
           element: <Courses></Courses>,
-          loader: ()=>fetch(`https://nieamulkabir.github.io/data-generate-file/alfath.json`)
+          loader: () => fetch(`http://localhost:5000/allCourses`)
         },
         {
-          path:'login',
-          element:<Login></Login>
+          path:'courseDetails/:id',
+          element: <CourseDetails></CourseDetails>,
+          loader:({params})=>fetch(`http://localhost:5000/courses/${params.id}`)
         },
         {
-          path:'register',
-          element:<Register></Register>
+          path: 'contact',
+          element: <Contact></Contact>
+        },
+        {
+          path: 'login',
+          element: <Login></Login>
+        },
+        {
+          path: 'register',
+          element: <Register></Register>
         }
       ]
     }
@@ -42,6 +54,7 @@ function App() {
   return (
     <div>
       <RouterProvider router={router}></RouterProvider>
+      <Toaster></Toaster>
     </div>
   );
 }
