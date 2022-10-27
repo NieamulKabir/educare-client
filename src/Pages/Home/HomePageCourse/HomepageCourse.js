@@ -1,9 +1,10 @@
 import React from 'react';
-import { useLoaderData } from 'react-router-dom';
+import { FaBook, FaStar } from 'react-icons/fa';
+import { Link, useLoaderData } from 'react-router-dom';
 
 const HomepageCourse = () => {
     const homePageAllCourses = useLoaderData();
-    
+
     return (
         <div>
 
@@ -20,11 +21,18 @@ const HomepageCourse = () => {
                                 <img src={course.img} alt="courses" className="rounded-xl h-60" />
                             </figure>
                             <div className="card-body items-center text-center">
+                                <div className='flex justify-between '>
+                                    <p className='flex justify-center items-center mr-10'> <FaBook className=''></FaBook> {course?.lessons} lessons</p>
+                                    <p className='flex justify-center items-center'><FaStar className='text-yellow-500'></FaStar>{course?.ratting}</p>
+
+                                </div>
                                 <h2 className="text-xl font-bold mb-0">{course.title}</h2>
                                 <p className='mt-0'><small>{course.sector}</small></p>
                                 <p>{course.description}</p>
                                 <div className="card-actions">
-                                    <button className="btn btn-primary">Buy Now</button>
+                                    <Link to={`/courseDetails/${course.id}`}>
+                                        <button className="btn btn-primary">Details</button>
+                                    </Link>
                                 </div>
                             </div>
 

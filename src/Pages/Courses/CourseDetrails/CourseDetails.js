@@ -14,10 +14,10 @@ const CourseDetails = () => {
                         <p className='flex justify-center items-center'><FaStar className='text-yellow-500'></FaStar>{courseDetails?.ratting}</p>
 
                     </div>
-                    <h2 className="text-2xl font-bold">{courseDetails?.title}</h2>
+                    <h2 className="text-3xl font-bold">{courseDetails?.title}</h2>
                     <small>{courseDetails?.sector}</small>
-                    <p>{courseDetails?.description}</p>
-                    <p>{courseDetails?.price}</p>
+                    <p className='text-lg'>{courseDetails?.description}</p>
+                    <p className='font-bold'>{courseDetails?.price} BDT</p>
                     <div className="card-actions justify-center">
                         <Link to='/courses'>
                             <button className="btn btn-primary">Go back</button>
