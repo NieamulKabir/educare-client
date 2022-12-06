@@ -26,43 +26,43 @@ function App() {
         {
           path: 'home',
           element: <Home></Home>,
-          loader: () => fetch(`http://localhost:5000/allcourses`)
+          loader: () => fetch(`https://educare.onrender.com/allCourses`)
         },
         {
           path: 'courses',
           element: <Courses></Courses>,
-          loader: () => fetch(`http://localhost:5000/allCourses`)
+          loader: () => fetch(`https://educare.onrender.com/allCourses`)
         },
         {
           path: 'courseDetails/:id',
           element: <PrivateRoute><CourseDetails></CourseDetails></PrivateRoute>,
-          loader: ({ params }) => fetch(`http://localhost:5000/courses/${params.id}`)
+          loader: ({ params }) => fetch(`https://educare.onrender.com/courses/${params.id}`)
         },
         {
           path: 'blog',
           element: <Blog></Blog>
         },
-    {
-      path: 'contact',
-      element: <Contact></Contact>
-    },
-    {
-      path: 'login',
-      element: <Login></Login>
-    },
-    {
-      path: 'register',
-      element: <Register></Register>
-    }
-  ]
+        {
+          path: 'contact',
+          element: <Contact></Contact>
+        },
+        {
+          path: 'login',
+          element: <Login></Login>
+        },
+        {
+          path: 'register',
+          element: <Register></Register>
+        }
+      ]
     }
   ])
-return (
-  <div>
-    <RouterProvider router={router}></RouterProvider>
-    <Toaster></Toaster>
-  </div>
-);
+  return (
+    <div>
+      <RouterProvider router={router}></RouterProvider>
+      <Toaster></Toaster>
+    </div>
+  );
 }
 
 export default App;
